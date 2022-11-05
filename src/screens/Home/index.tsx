@@ -1,18 +1,34 @@
-import { Text, View, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, TextInput, TouchableOpacity, FlatList, Alert } from 'react-native';
 
 import { Participant } from '../../components/Participant';
 
 import { styles } from './styles';
 
 export function Home() {
-    const participants = ['Bruno', 'Joice', 'Theodora', 'João', 'Maria', 'José', 'Antonia', 'Raquel'];
+    const [participants, setParticipants] = useState<string[]>([]);
+    const [participantName, setParticipantName] = useState('');
 
     function handleParticipantAdd() {
-        console.log('clicou!');        
+        if(participants.includes(participantName)) {
+            return Alert.alert("Participante existente", "Já existe um participante com esse nome");
+        }        
+
+        setParticipants(prevState => [...prevState, participantName]);
+        setParticipantName('');
     }
 
-    function handleParticipantRemove(name: string) {
-        console.log(`clicou! ${name}`);        
+    function handleParticipantRemove(name: string) {               
+        Alert.alert("Remover", `Remover o participande ${name}?`, [
+            {
+                text: "Sim",
+                onPress: () => setParticipants(prevState => prevState.filter(participant => participant !== name))
+            },
+            {
+                text: "Não",
+                style: "cancel"
+            }
+        ]);
     }
 
   return(
@@ -31,6 +47,8 @@ export function Home() {
             style={styles.input} 
             placeholder="Nome do participante"
             placeholderTextColor={'#6b6b6b'}
+            onChangeText={setParticipantName}
+            value={participantName}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
@@ -47,7 +65,7 @@ export function Home() {
                 <Participant 
                         key={item}
                         name={item}
-                        onRemove={() => handleParticipantRemove('Bruno')}
+                        onRemove={() => handleParticipantRemove(item)}
                     />
             )}
             showsVerticalScrollIndicator={false}
