@@ -8,6 +8,11 @@ export function Home() {
   function handleParticipantAdd() {
     console.log('Adicionar participante')
   }
+
+  function handleParticipantRemove() {
+    console.log('Remover participante')
+  }
+
   return (
     <View style={styles.container} >
       <Text style={styles.eventName}>Nome do Evento</Text>
@@ -32,10 +37,7 @@ export function Home() {
 
       </View>
 
-      <Participant />
-      <Participant />
-      <Participant />
-      <Participant />
+      <Participant name="Bruno" onRemove={handleParticipantRemove}/>
     </View>
   )
 }
