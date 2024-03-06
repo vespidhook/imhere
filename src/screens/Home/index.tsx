@@ -21,12 +21,19 @@ export function Home() {
     if (participants.includes('Bruno')) {
       return Alert.alert('Participante já existe', 'Esse participante já foi adicionado a lista de presença.')
     }
-    
-    console.log('Adicionar participante')
-  }
+      }
 
   function handleParticipantRemove(name: string) {
-    console.log('Remover participante')
+    Alert.alert('Remover participante', `Deseja remover ${name} da lista de presença?`,[
+      {
+        text: 'Sim',
+        onPress: () => Alert.alert(`${name} removido`, `${name} foi removido da lista de presença.`)
+      },
+      {
+        text: 'Não',
+        style: 'cancel'
+      }
+    ])
   }
 
   return (
@@ -58,6 +65,7 @@ export function Home() {
         keyExtractor={item => item}
         renderItem={({ item }) => (
           <Participant
+            key={item}
             name={item}
             onRemove={() => handleParticipantRemove(item)}
           />
