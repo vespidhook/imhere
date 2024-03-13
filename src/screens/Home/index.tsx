@@ -2,32 +2,34 @@ import { Alert, FlatList, Text, TextInput, TouchableOpacity, View } from "react-
 
 import { styles } from "./styles";
 import { Participant } from "../../components/Participant";
+import { useState } from "react";
 
 export function Home() {
-  const participants = [
-    'Bruno',
-    'Diego',
-    'Mayk',
-    'Robson',
-    'Vitor',
-    'Guilherme',
-    'Joice',
-    "Helena",
-    "Fernanda",
-    "Larissa",
-  ]
+  const [participants, setParticipants] = useState<string[]>([]);
+  const [participantName, setParticipantName] = useState('');
+
+  //data atual
+  const date = new Date();
 
   function handleParticipantAdd() {
-    if (participants.includes('Bruno')) {
+    if (!participantName) {
+      return Alert.alert('Nome do participante vazio', 'Por favor, insira um nome para o participante.')
+    }
+
+    if (participants.includes(participantName)) {
       return Alert.alert('Participante já existe', 'Esse participante já foi adicionado a lista de presença.')
     }
-      }
 
-  function handleParticipantRemove(name: string) {
+    setParticipants(prevState => [...prevState, participantName]);
+    setParticipantName('');
+  }
+
+  function handleParticipantRemove(name: string) {    
     Alert.alert('Remover participante', `Deseja remover ${name} da lista de presença?`,[
       {
         text: 'Sim',
-        onPress: () => Alert.alert(`${name} removido`, `${name} foi removido da lista de presença.`)
+        onPress: () => setParticipants(prevState => prevState.filter(participant => participant !== name)
+        )
       },
       {
         text: 'Não',
@@ -41,7 +43,12 @@ export function Home() {
       <Text style={styles.eventName}>Nome do Evento</Text>
 
       <Text style={styles.eventDate}>
-        Sexta, 4 de Novembro de 2022.
+        {date.toLocaleDateString('pt-BR', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        })
+        }
       </Text>
 
       <View style={styles.form} >
@@ -49,6 +56,8 @@ export function Home() {
           style={styles.input}
           placeholder="Nome do participante"
           placeholderTextColor="#6b6b6b"
+          onChangeText={setParticipantName}
+          value={participantName}
         />
       
         <TouchableOpacity 
